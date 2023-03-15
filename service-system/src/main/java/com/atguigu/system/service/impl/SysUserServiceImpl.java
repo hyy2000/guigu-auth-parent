@@ -52,7 +52,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     //TODO
     private List<String> getUserBtnPermsByUserId(Long userId) {
-
+        //getUserMenusByUserId(userId)可以获得菜单列表，取其中的perms
         return null;
     }
 
