@@ -5,16 +5,16 @@
 <mapper namespace="com.atguigu.system.mapper.SysMenuMapper">
 
     <select id="selectMenuListByUserId" resultType="com.atguigu.model.system.SysMenu">
-        SELECT m.*
+        SELECT DISTINCT m.*
         FROM sys_user_role ur
                  JOIN sys_role_menu rm
-                      on ur.role_id = rm.role_id
                  JOIN sys_menu m
                       ON m.id = rm.menu_id
-        WHERE user_id = #{userId}
+                      ON ur.role_id = rm.role_id
+        WHERE ur.user_id = #{userId}
           AND ur.is_deleted = 0
           AND rm.is_deleted = 0
           AND m.is_deleted = 0
-          and m.status = 1
+          AND m.status = 1
     </select>
 </mapper>

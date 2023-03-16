@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         //根据用户id获取权限菜单的方法
         //获取指定用户的菜单信息
         List<SysMenu> userMenuList = this.getUserMenusByUserId(userId);
+        //转化为转换为菜单树
         List<SysMenu> menusTree = MenuHelper.buildTree(userMenuList);
+        //转化为路由
         List<RouterVo> routerVos = RouterHelper.buildRouters(menusTree);
         //获取用户的按钮权限信息
         List<String> userButtonList = this.getUserBtnPermsByUserId(userId);
@@ -53,12 +56,23 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     //TODO
     private List<String> getUserBtnPermsByUserId(Long userId) {
         //getUserMenusByUserId(userId)可以获得菜单列表，取其中的perms
-        return null;
+        List<SysMenu> userMenus = getUserMenusByUserId(userId);
+//        List<String> permList = null;空指针
+        List<String> permList = new ArrayList<>();
+        //遍历userMenus取出其中的perm，放入permList
+        for (SysMenu userMenu: userMenus
+             ) {
+            if (userMenu.getType() == 2){
+                permList.add(userMenu.getPerms());
+            }
+        }
+       // userMenus.forEach(menu->permList.add(menu.getPerms()));
+        return permList;
     }
 
     //TODO
     private List<SysMenu> getUserMenusByUserId(Long userId) {
-        List<SysMenu> menuList = null;
+        List<SysMenu> menuList = null;//下面方法的返回值是list
         if (userId==1){
             //超级管理员
             //获取所有的菜单权限，查菜单表status=1的
